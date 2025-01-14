@@ -9,11 +9,14 @@ public class HeroParty extends AbstractParty{
 	}
 	
 	public void rest() {
-		
+		for(AbstractCharacter member: super.getMembers()) {
+			Hero hero = (Hero) member;
+			hero.rest();
+		}
 	}
 	
 	public void printPartyStatus() {
-		for(AbstractCharacter member: getMembers()) {
+		for(AbstractCharacter member: super.getMembers()) {
 			Hero hero = (Hero) member;
 			if(hero.getHp() > 0  && !hero.isEscaped()) {
 				System.out.print(hero.getName() + "(" + hero.getJob() + "):" + hero.getHp() + " ");
@@ -41,6 +44,9 @@ public class HeroParty extends AbstractParty{
 	}
 	
 	public void init() {
-		
+		AbstractCharacter [] members = super.getMembers();
+		for(AbstractCharacter member: members){
+			member.init();
+		}
 	}
 }

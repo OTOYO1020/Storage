@@ -1,7 +1,5 @@
 package rpg.character;
 
-import rpg.character.hero.Hero;
-
 public abstract class AbstractParty {
 	private AbstractCharacter[] members;
 	
@@ -9,9 +7,9 @@ public abstract class AbstractParty {
 		this.members = members;
 	}
 	
-	protected boolean isEscapeAll(AbstractCharacter[] members) {
+	protected boolean isEscapeAll() {
 		boolean isEscapeAll = false;
-		for(AbstractCharacter member: members) {
+		for(AbstractCharacter member: this.members) {
 			if(!member.isEscaped()) {
 				isEscapeAll = true;
 			}
@@ -32,11 +30,16 @@ public abstract class AbstractParty {
 	public String turn(AbstractParty enemies) {
 		for(AbstractCharacter member: this.members) {
 			if(!member.isDead() && !member.isEscaped()) {
-				Hero hero = (Hero) member;
-				hero.command(member, enemies);
+				member.command(this, enemies);
+				if(enemies.isAllDead()){
+					return "BEAT";
+				}
+				if(this.isEscapeAll()){
+					return "ESCAPE";
+				}
 			}
 		}
-		return "";
+		return "CONTINUE";
 	}
 	
 	public AbstractCharacter[] getMembers() {

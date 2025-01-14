@@ -28,7 +28,7 @@ public abstract class AbstractCharacter {
 		return this.hp;
 	}
 	
-	private void setHp(int hp) {
+	public void setHp(int hp) {  //キングデーモンに回復させるためにpublicへ変更
 		this.hp = hp;
 	}
 	
@@ -60,19 +60,22 @@ public abstract class AbstractCharacter {
 		if(enemies.isAllDead()) {
 			return false;
 		}
+		AbstractCharacter targetCharacter = null;
+		targetCharacter = this.selectTarget(enemies);
 		Random random = new Random();
 		int randomAttack = random.nextInt(this.attack) + this.attack;
-		int damage = this.gotDamage(randomAttack);
-		System.out.println(this.getName() + "の攻撃 nameに" + damage + "のダメージ");
-		
+		int damage = targetCharacter.gotDamage(randomAttack);
+		System.out.println(this.getName() + "の攻撃" + targetCharacter.getName() + "に" + damage + "のダメージ");
+		targetCharacter.actionStatus();
 		return true;
 	}
 	
 	public int gotDamage(int damage) {
-		this.hp -= damage;
-		if(this.hp < 0) {
+		if(this.hp - damage < 0) {
+			damage = this.hp;
 			this.hp = 0;
-			damage = this.maxHp;
+		}else {
+			this.hp -= damage;
 		}
 		return damage;
 	}
@@ -90,7 +93,7 @@ public abstract class AbstractCharacter {
 	}
 	
 	public void init() {
-		//何かしら記述するんかね
+		this.escaped = false;
 	}
 	
 	public void actionStatus() {
@@ -99,7 +102,7 @@ public abstract class AbstractCharacter {
 		}
 	}
 	
-	protected AbstractCharacter selectTarget(AbstractParty targets) {
-		return "";
-	}
+	protected abstract void command(AbstractParty allies, AbstractParty enemies);
+	
+	protected abstract AbstractCharacter selectTarget(AbstractParty targets);
 }
